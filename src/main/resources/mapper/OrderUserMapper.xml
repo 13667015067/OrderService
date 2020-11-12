@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "--//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjh.orderservice.dao.OrderUserDao">
+    <resultMap id="OrderUserMap" type="com.pjh.orderservice.entity.OrderUser">
+        <id property="id" column="id"/>
+        <result property="account" column="account"/>
+        <result property="pwd" column="pwd"/>
+        <result property="type" column="type"/>
+        <result property="phone" column="phone"/>
+        <result property="company" column="company"/>
+    </resultMap>
+
+    <select id="getUserByAccount" resultMap="OrderUserMap">
+        SELECT
+            *
+        FROM
+            order_user
+        WHERE
+            account = #{account}
+    </select>
+
+    <insert id="addUser" parameterType="com.pjh.orderservice.entity.OrderUser">
+        INSERT INTO
+            order_user(
+                account,pwd,type,phone,company
+            )
+        VALUES
+            (
+                #{user.account},#{user.pwd},#{user.type},#{user.phone},#{user.company}
+            )
+
+    </insert>
+</mapper>

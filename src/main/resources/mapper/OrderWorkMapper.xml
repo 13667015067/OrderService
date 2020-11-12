@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "--//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjh.orderservice.dao.OrderWorkDao">
+    <resultMap id="OrderWorkMap" type="com.pjh.orderservice.entity.OrderWork">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="nodeId" column="node_id"/>
+        <result property="nodeType" column="node_type"/>
+        <result property="workData" column="work_data"/>
+        <result property="nodeState" column="node_state"/>
+        <result property="dealUser" column="deal_user"/>
+        <result property="orderLogic" column="order_logic"/>
+        <result property="createTime" column="create_time"/>
+        <result property="endTime" column="end_time"/>
+    </resultMap>
+
+    <insert id="addOrderWork" parameterType="com.pjh.orderservice.entity.OrderWork" useGeneratedKeys="true" keyProperty="id"  keyColumn="id">
+        INSERT INTO
+            order_work(
+                order_id,node_id,node_type,node_state,deal_user,order_logic,create_time
+            )
+        VALUES
+            (
+                #{orderWork.orderId},#{orderWork.nodeId},#{orderWork.nodeType},#{orderWork.nodeState},
+                #{orderWork.dealUser},#{orderWork.orderLogic},#{orderWork.createTime}
+            )
+    </insert>
+
+    <select id="getWorksByOrderId" resultMap="OrderWorkMap">
+        SELECT
+            *
+        FROM
+            order_work
+        WHERE
+            order_id = #{orderId}
+    </select>
+
+    <select id="getWorkById" resultMap="OrderWorkMap">
+        SELECT
+            *
+        FROM
+            order_work
+        WHERE
+            id = #{id}
+    </select>
+
+    <update id="updateWork" parameterType="com.pjh.orderservice.entity.OrderWork">
+        UPDATE
+            order_work
+        SET
+            node_state = #{work.nodeState}
+        ,
+            end_time = #{work.endTime}
+        <if test="work.workData != null and work.workData != ''">
+            ,
+                work_data = #{work.workData}
+        </if>
+
+        WHERE
+            id = #{work.id}
+    </update>
+
+    <delete id="delWorks">
+        DELETE FROM
+            order_work
+        WHERE
+            order_id = #{orderId}
+    </delete>
+</mapper>

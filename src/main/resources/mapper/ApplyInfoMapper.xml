@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "--//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjh.orderservice.dao.ApplyInfoDao">
+    <resultMap id="ApplyInfoMap" type="com.pjh.orderservice.entity.ApplyInfo">
+        <id property="id" column="id"/>
+        <result property="applyName" column="apply_name"/>
+        <result property="applyKey" column="apply_key"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="addApplyInfo" parameterType="com.pjh.orderservice.entity.ApplyInfo">
+        INSERT INTO
+            apply_info(
+                id,apply_name,apply_key,create_user,create_time
+            )
+        VALUES (
+            #{applyInfo.id},#{applyInfo.applyName},#{applyInfo.applyKey},
+            #{applyInfo.createUser},#{applyInfo.createTime}
+        )
+    </insert>
+
+    <select id="getApplyInfoById" resultMap="ApplyInfoMap">
+        SELECT
+            *
+        FROM
+            apply_info
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="getALLApply" resultMap="ApplyInfoMap">
+        SELECT
+            *
+        FROM
+            apply_info
+        WHERE
+            create_user = #{account}
+        <if test="applyName != null and applyName != ''">
+            AND
+                apply_name LIKE '%${applyName}%'
+        </if>
+    </select>
+
+    <select id="getApplyByAccountAndName" resultMap="ApplyInfoMap">
+        SELECT
+        *
+        FROM
+        apply_info
+        WHERE
+            create_user = #{account}
+        AND
+            apply_name = #{applyName}
+    </select>
+</mapper>

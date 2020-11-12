@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "--//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjh.orderservice.dao.StaffDao">
+    <resultMap id="StaffMap" type="com.pjh.orderservice.entity.Staff">
+        <id property="id" column="id"/>
+        <result property="applyId" column="apply_id"/>
+        <result property="account" column="account"/>
+        <result property="phone" column="phone"/>
+        <result property="name" column="name"/>
+        <result property="department" column="department"/>
+    </resultMap>
+
+    <insert id="addStaff" parameterType="com.pjh.orderservice.entity.Staff">
+        INSERT INTO
+            staff(
+                apply_id,account,phone,name,department
+            )
+        VALUES (
+            #{staff.applyId},#{staff.account},#{staff.phone},#{staff.name},#{staff.department}
+        )
+    </insert>
+
+    <select id="getStaffByAccount" resultMap="StaffMap">
+        SELECT
+            *
+        FROM
+            staff
+        WHERE
+            apply_id = #{applyId}
+        AND
+            account = #{account}
+    </select>
+
+    <select id="getStaffById" resultMap="StaffMap">
+        SELECT
+            *
+        FROM
+            staff
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="getStaffListByApplyId" resultMap="StaffMap">
+        SELECT
+            *
+        FROM
+            staff
+        WHERE
+            apply_id = #{applyId}
+    </select>
+
+    <update id="updateStaffById" parameterType="com.pjh.orderservice.entity.Staff">
+        UPDATE
+            staff
+        SET
+            id = #{staff.id}
+        <if test="staff.phone != null and staff.phone != ''">
+            ,phone = #{staff.phone}
+        </if>
+        <if test="staff.name != null and staff.name != ''">
+            ,name = #{staff.name}
+        </if>
+        <if test="staff.department != null and staff.department != ''">
+            ,department = #{staff.department}
+        </if>
+        WHERE
+            id = #{staff.id}
+    </update>
+
+    <delete id="deleteStaff" >
+        DELETE FROM
+            staff
+        WHERE
+            id = #{id}
+    </delete>
+</mapper>

@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "--//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjh.orderservice.dao.OrderTaskDao">
+    <resultMap id="OrderTaskMap" type="com.pjh.orderservice.entity.OrderTask">
+        <id property="id" column="id"/>
+        <result property="applyId" column="apply_id"/>
+        <result property="name" column="name"/>
+        <result property="orderStyle" column="order_style"/>
+        <result property="orderType" column="order_type"/>
+        <result property="logicId" column="logic_id"/>
+        <result property="modelId" column="model_id"/>
+    </resultMap>
+    
+    <insert id="addOrderTask" parameterType="com.pjh.orderservice.entity.OrderTask">
+        INSERT INTO
+            order_task(
+                apply_id,name,order_style,order_type,logic_id,model_id
+            )
+        VALUES
+            (
+                #{orderTask.applyId},#{orderTask.name},#{orderTask.orderStyle},
+                #{orderTask.orderType},#{orderTask.logicId},#{orderTask.modelId}
+            )
+    </insert>
+
+    <select id="getOrderTask" resultMap="OrderTaskMap">
+        SELECT
+            *
+        FROM
+            order_task
+        WHERE
+            apply_id = #{applyId}
+        AND
+            name = #{name}
+        AND
+            order_style = #{orderStyle}
+    </select>
+
+    <select id="getOrderTaskList" resultMap="OrderTaskMap">
+        SELECT
+            *
+        FROM
+            order_task
+        WHERE
+            apply_id = #{applyId}
+        <if test="orderType != null and orderType != ''">
+            AND
+            order_type = #{orderType}
+        </if>
+        <if test="orderStyle != null and orderStyle != ''">
+            AND
+                order_style = #{orderStyle}
+        </if>
+    </select>
+
+    <update id="updateOrderTask">
+        UPDATE
+            order_task
+        SET
+            id = #{id}
+        <if test="name != null and name != ''">
+            ,name = #{name}
+        </if>
+        <if test="logicId != -1">
+            ,logic_id = #{logicId}
+        </if>
+        <if test="modelId != -1">
+            ,model_id = #{modelId}
+        </if>
+        WHERE
+            id = #{id}
+    </update>
+
+    <select id="getOrderTaskById" resultMap="OrderTaskMap">
+        SELECT
+            *
+        FROM
+            order_task
+        WHERE
+            id = #{id}
+    </select>
+
+    <delete id="deleteTaskById">
+        DELETE FROM
+            order_task
+        WHERE
+            id = #{id}
+    </delete>
+    
+    <select id="getOrderStyle" resultType="string">
+        SELECT
+            order_style
+        FROM
+            order_task
+        WHERE
+            apply_id = #{applyId}
+        GROUP BY
+            order_style ;
+    </select>
+
+</mapper>

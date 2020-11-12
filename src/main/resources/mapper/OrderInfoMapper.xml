@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "--//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjh.orderservice.dao.OrderInfoDao">
+    <resultMap id="OrderInfoMap" type="com.pjh.orderservice.entity.OrderInfo">
+        <id property="id" column="id"/>
+        <result property="applyId" column="apply_id"/>
+        <result property="orderStyle" column="order_style"/>
+        <result property="orderType" column="order_type"/>
+        <result property="orderContent" column="order_content"/>
+        <result property="orderState" column="order_state"/>
+        <result property="dealTime" column="deal_time"/>
+        <result property="orderLogic" column="order_logic"/>
+        <result property="nowDealUser" column="now_deal_user"/>
+        <result property="taskName" column="task_name"/>
+        <result property="endTime" column="end_time"/>
+        <result property="createUser" column="create_user"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insertOrderInfo" parameterType="com.pjh.orderservice.entity.OrderInfo" >
+        INSERT INTO
+            order_info
+            (
+                id,apply_id,order_style,order_type,order_content,order_state,deal_time,
+                order_logic,now_deal_user,task_name,end_time,create_user,create_time
+            )
+        VALUES
+            (
+                #{orderInfo.id},#{orderInfo.applyId},#{orderInfo.orderStyle},#{orderInfo.orderType},
+                #{orderInfo.orderContent},#{orderInfo.orderState},#{orderInfo.dealTime},
+                #{orderInfo.orderLogic},#{orderInfo.nowDealUser},#{orderInfo.taskName},
+                #{orderInfo.endTime},#{orderInfo.createUser},#{orderInfo.createTime}
+            )
+    </insert>
+
+    <select id="getOrderInfoList" resultMap="OrderInfoMap">
+        SELECT
+            *
+        FROM
+            order_info
+        WHERE
+            apply_id = #{applyId}
+        <if test="orderState != -1">
+            AND
+            order_state= #{orderState}
+        </if>
+
+        <if test="amount != 0">
+            LIMIT
+                #{start},#{amount}
+        </if>
+    </select>
+
+    <select id="getOrderInfo" resultMap="OrderInfoMap">
+        SELECT
+        *
+        FROM
+        order_info
+        WHERE
+        id = #{orderId}
+    </select>
+    
+    <update id="updateOrderInfo">
+        UPDATE
+            order_info
+        SET
+            id = #{orderId}
+        <if test="orderContent != null and orderContent != ''">
+            , order_content= #{orderContent}
+        </if>
+        <if test="dealUser != null and dealUser != ''">
+            , now_deal_user= #{dealUser}
+        </if>
+        <if test="orderLogic != null and orderLogic != ''">
+            , order_logic= #{orderLogic}
+        </if>
+        <if test="endTime != null">
+            , end_time= #{endTime}
+        </if>
+        <if test="state != null">
+            , order_state= #{state}
+        </if>
+        WHERE
+            id = #{orderId}
+
+    </update>
+
+    <select id="getOrderInfoListByUser" resultMap="OrderInfoMap">
+        SELECT
+            *
+        FROM
+            order_info
+        WHERE
+            apply_id = #{applyId}
+        AND
+            now_deal_user = #{user}
+        <if test="orderState != -1">
+            AND
+            order_state= #{orderState}
+        </if>
+
+        <if test="amount != 0">
+            LIMIT
+            #{start},#{amount}
+        </if>
+    </select>
+
+    <select id="getAllAmount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            order_info
+        WHERE
+            apply_id = #{applyId}
+        <if test="orderState != -1">
+            AND
+                order_state = #{orderState}
+        </if>
+
+        <if test="user != null and user != ''">
+            AND
+                now_deal_user = #{user}
+        </if>
+    </select>
+
+    <delete id="delOrderInfo">
+        DELETE FROM
+            order_info
+        WHERE
+            id = #{orderId}
+    </delete>
+</mapper>

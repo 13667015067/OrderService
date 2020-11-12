@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "--//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pjh.orderservice.dao.LogicDao">
+    <resultMap id="LogicMap" type="com.pjh.orderservice.entity.Logic">
+        <id property="id" column="id"/>
+        <result property="applyId" column="apply_id" />
+        <result property="name" column="name" />
+        <result property="data" column="data" />
+        <result property="createUser" column="create_user" />
+        <result property="createTime" column="create_time" />
+    </resultMap>
+
+    <insert id="addLogic" parameterType="com.pjh.orderservice.entity.Logic">
+        INSERT INTO
+            logic(
+                apply_id,name,data,create_user,create_time
+            )
+            VALUES (
+                #{logic.applyId},#{logic.name},#{logic.data},#{logic.createUser},#{logic.createTime}
+            )
+    </insert>
+    
+    <select id="getLogicById" resultMap="LogicMap">
+        SELECT
+            *
+        FROM
+            logic
+        WHERE
+            id = #{id}
+    </select>
+
+    <select id="getLogicByPage" resultMap="LogicMap">
+        SELECT
+            *
+        FROM
+            logic
+        WHERE
+            apply_id = #{applyId}
+        LIMIT
+            #{start},#{amount}
+    </select>
+
+    <select id="getLogicByName" resultMap="LogicMap">
+        SELECT
+            *
+        FROM
+            logic
+        WHERE
+            apply_id = #{applyId}
+        <if test="logicName != null and logicName != ''">
+            AND
+            name LIKE '%${logicName}%'
+        </if>
+    </select>
+
+    <delete id="deleteLogicById" >
+        DELETE FROM
+            logic
+        WHERE
+            id = #{id}
+    </delete>
+
+    <update id="updateLogic" parameterType="com.pjh.orderservice.entity.Logic">
+        UPDATE
+            logic
+        SET
+            id = #{logic.id}
+        <if test="logic.name != null and logic.name != ''">
+            ,name = #{logic.name}
+        </if>
+        <if test="logic.data != null and logic.data != ''">
+            ,data = #{logic.data}
+        </if>
+        WHERE
+            id = #{logic.id}
+    </update>
+
+    <select id="getAllAmount" resultType="int">
+        SELECT
+            count(*)
+        FROM
+            logic
+        WHERE
+            apply_id = #{applyId}
+    </select>
+
+    <select id="getAllLogic" resultMap="LogicMap">
+        SELECT
+            *
+        FROM
+            logic
+        WHERE
+            apply_id = #{applyId}
+    </select>
+
+
+    <select id="getLogicByNameAndApplyId" resultMap="LogicMap">
+        SELECT
+            *
+        FROM
+            logic
+        WHERE
+            apply_id = #{applyId}
+        AND
+            name = #{logicName}
+    </select>
+</mapper>
